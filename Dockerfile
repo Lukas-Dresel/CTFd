@@ -16,9 +16,11 @@ RUN apk update && \
         git \
         openssl-dev
 
+RUN adduser -D -u 1001 -s /bin/sh ctfd
+
 COPY ./requirements.txt /opt/CTFd
 RUN pip install -r requirements.txt
-COPY . /opt/CTFd
+COPY --chown=1001:10001 . /opt/CTFd
 
 RUN for d in CTFd/plugins/*; do \
         if [ -f "$d/requirements.txt" ]; then \
@@ -27,8 +29,7 @@ RUN for d in CTFd/plugins/*; do \
     done;
 
 RUN chmod +x /opt/CTFd/docker-entrypoint.sh
-RUN adduser -D -u 1001 -s /bin/sh ctfd
-RUN chown -R 1001:1001 /opt/CTFd /var/log/CTFd /var/uploads
+RUN chown -R 1001:1001 /var/log/CTFd /var/uploads
 
 USER 1001
 EXPOSE 8000
