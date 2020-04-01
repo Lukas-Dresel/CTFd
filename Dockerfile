@@ -16,9 +16,10 @@ RUN apk update && \
         git \
         openssl-dev
 
+COPY ./requirements.txt /opt/CTFd
+RUN pip install -r requirements.txt
 COPY . /opt/CTFd
 
-RUN pip install -r requirements.txt
 RUN for d in CTFd/plugins/*; do \
         if [ -f "$d/requirements.txt" ]; then \
             pip install -r $d/requirements.txt; \
